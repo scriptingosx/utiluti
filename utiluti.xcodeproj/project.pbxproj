@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		C6C84541291AB2CF00AF407A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84540291AB2CF00AF407A /* main.swift */; };
+		C6C84549291AB2E800AF407A /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = C6C84548291AB2E800AF407A /* Algorithms */; };
+		C6C8454B291AB30100AF407A /* LSKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C8454A291AB30100AF407A /* LSKit.swift */; };
+		C6C8454E291AB58200AF407A /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = C6C8454D291AB58200AF407A /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +27,8 @@
 
 /* Begin PBXFileReference section */
 		C6C8453D291AB2CF00AF407A /* utiluti */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = utiluti; sourceTree = BUILT_PRODUCTS_DIR; };
-		C6C84540291AB2CF00AF407A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		C6C84540291AB2CF00AF407A /* main.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; tabWidth = 2; };
+		C6C8454A291AB30100AF407A /* LSKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = LSKit.swift; sourceTree = "<group>"; tabWidth = 2; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +36,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6C8454E291AB58200AF407A /* ArgumentParser in Frameworks */,
+				C6C84549291AB2E800AF407A /* Algorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				C6C84540291AB2CF00AF407A /* main.swift */,
+				C6C8454A291AB30100AF407A /* LSKit.swift */,
 			);
 			path = utiluti;
 			sourceTree = "<group>";
@@ -78,6 +85,10 @@
 			dependencies = (
 			);
 			name = utiluti;
+			packageProductDependencies = (
+				C6C84548291AB2E800AF407A /* Algorithms */,
+				C6C8454D291AB58200AF407A /* ArgumentParser */,
+			);
 			productName = utiluti;
 			productReference = C6C8453D291AB2CF00AF407A /* utiluti */;
 			productType = "com.apple.product-type.tool";
@@ -106,6 +117,10 @@
 				Base,
 			);
 			mainGroup = C6C84534291AB2CF00AF407A;
+			packageReferences = (
+				C6C84547291AB2E800AF407A /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				C6C8454C291AB58200AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = C6C8453E291AB2CF00AF407A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -121,6 +136,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6C84541291AB2CF00AF407A /* main.swift in Sources */,
+				C6C8454B291AB30100AF407A /* LSKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +193,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -231,7 +247,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -246,6 +262,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JME5BW3F3R;
 				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scriptingosx.utiluti;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -257,6 +275,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JME5BW3F3R;
 				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scriptingosx.utiluti;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -284,6 +304,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C6C84547291AB2E800AF407A /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		C6C8454C291AB58200AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C6C84548291AB2E800AF407A /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C6C84547291AB2E800AF407A /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		C6C8454D291AB58200AF407A /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C6C8454C291AB58200AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C6C84535291AB2CF00AF407A /* Project object */;
 }
