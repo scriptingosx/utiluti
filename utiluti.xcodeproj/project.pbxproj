@@ -11,6 +11,8 @@
 		C6C84549291AB2E800AF407A /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = C6C84548291AB2E800AF407A /* Algorithms */; };
 		C6C8454B291AB30100AF407A /* LSKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C8454A291AB30100AF407A /* LSKit.swift */; };
 		C6C8454E291AB58200AF407A /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = C6C8454D291AB58200AF407A /* ArgumentParser */; };
+		C6C84552291CEF1500AF407A /* URLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84551291CEF1500AF407A /* URLScheme.swift */; };
+		C6C84554291CEFC200AF407A /* TypeCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84553291CEFC200AF407A /* TypeCommands.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +31,8 @@
 		C6C8453D291AB2CF00AF407A /* utiluti */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = utiluti; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6C84540291AB2CF00AF407A /* main.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; tabWidth = 2; };
 		C6C8454A291AB30100AF407A /* LSKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = LSKit.swift; sourceTree = "<group>"; tabWidth = 2; };
+		C6C84551291CEF1500AF407A /* URLScheme.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = URLScheme.swift; sourceTree = "<group>"; tabWidth = 2; };
+		C6C84553291CEFC200AF407A /* TypeCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCommands.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +54,9 @@
 				C6C8453F291AB2CF00AF407A /* utiluti */,
 				C6C8453E291AB2CF00AF407A /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		C6C8453E291AB2CF00AF407A /* Products */ = {
 			isa = PBXGroup;
@@ -64,6 +70,8 @@
 			isa = PBXGroup;
 			children = (
 				C6C84540291AB2CF00AF407A /* main.swift */,
+				C6C84553291CEFC200AF407A /* TypeCommands.swift */,
+				C6C84551291CEF1500AF407A /* URLScheme.swift */,
 				C6C8454A291AB30100AF407A /* LSKit.swift */,
 			);
 			path = utiluti;
@@ -135,7 +143,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6C84554291CEFC200AF407A /* TypeCommands.swift in Sources */,
 				C6C84541291AB2CF00AF407A /* main.swift in Sources */,
+				C6C84552291CEF1500AF407A /* URLScheme.swift in Sources */,
 				C6C8454B291AB30100AF407A /* LSKit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
