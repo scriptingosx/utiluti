@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 import UniformTypeIdentifiers
 
-class LSKit {
+struct LSKit {
   
   /**
    returns a list of URLs to applications that can open URLs starting with the scheme

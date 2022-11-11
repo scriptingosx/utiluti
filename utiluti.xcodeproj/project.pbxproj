@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		C6C84541291AB2CF00AF407A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84540291AB2CF00AF407A /* main.swift */; };
-		C6C84549291AB2E800AF407A /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = C6C84548291AB2E800AF407A /* Algorithms */; };
-		C6C8454B291AB30100AF407A /* LSKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C8454A291AB30100AF407A /* LSKit.swift */; };
-		C6C8454E291AB58200AF407A /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = C6C8454D291AB58200AF407A /* ArgumentParser */; };
 		C6C84552291CEF1500AF407A /* URLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84551291CEF1500AF407A /* URLScheme.swift */; };
 		C6C84554291CEFC200AF407A /* TypeCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84553291CEFC200AF407A /* TypeCommands.swift */; };
+		C6C84557291CF0C600AF407A /* LSKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C8454A291AB30100AF407A /* LSKit.swift */; };
+		C6C84559291D64B100AF407A /* GetUTI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6C84558291D64B100AF407A /* GetUTI.swift */; };
+		C6C84563291E570C00AF407A /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = C6C84562291E570C00AF407A /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +33,7 @@
 		C6C8454A291AB30100AF407A /* LSKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = LSKit.swift; sourceTree = "<group>"; tabWidth = 2; };
 		C6C84551291CEF1500AF407A /* URLScheme.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = URLScheme.swift; sourceTree = "<group>"; tabWidth = 2; };
 		C6C84553291CEFC200AF407A /* TypeCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeCommands.swift; sourceTree = "<group>"; };
+		C6C84558291D64B100AF407A /* GetUTI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUTI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,8 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6C8454E291AB58200AF407A /* ArgumentParser in Frameworks */,
-				C6C84549291AB2E800AF407A /* Algorithms in Frameworks */,
+				C6C84563291E570C00AF407A /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +53,7 @@
 			children = (
 				C6C8453F291AB2CF00AF407A /* utiluti */,
 				C6C8453E291AB2CF00AF407A /* Products */,
+				C6C8455F291E568500AF407A /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -72,9 +73,17 @@
 				C6C84540291AB2CF00AF407A /* main.swift */,
 				C6C84553291CEFC200AF407A /* TypeCommands.swift */,
 				C6C84551291CEF1500AF407A /* URLScheme.swift */,
+				C6C84558291D64B100AF407A /* GetUTI.swift */,
 				C6C8454A291AB30100AF407A /* LSKit.swift */,
 			);
 			path = utiluti;
+			sourceTree = "<group>";
+		};
+		C6C8455F291E568500AF407A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -94,8 +103,7 @@
 			);
 			name = utiluti;
 			packageProductDependencies = (
-				C6C84548291AB2E800AF407A /* Algorithms */,
-				C6C8454D291AB58200AF407A /* ArgumentParser */,
+				C6C84562291E570C00AF407A /* ArgumentParser */,
 			);
 			productName = utiluti;
 			productReference = C6C8453D291AB2CF00AF407A /* utiluti */;
@@ -126,8 +134,7 @@
 			);
 			mainGroup = C6C84534291AB2CF00AF407A;
 			packageReferences = (
-				C6C84547291AB2E800AF407A /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				C6C8454C291AB58200AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				C6C8455A291D727D00AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			productRefGroup = C6C8453E291AB2CF00AF407A /* Products */;
 			projectDirPath = "";
@@ -144,9 +151,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6C84554291CEFC200AF407A /* TypeCommands.swift in Sources */,
+				C6C84557291CF0C600AF407A /* LSKit.swift in Sources */,
 				C6C84541291AB2CF00AF407A /* main.swift in Sources */,
 				C6C84552291CEF1500AF407A /* URLScheme.swift in Sources */,
-				C6C8454B291AB30100AF407A /* LSKit.swift in Sources */,
+				C6C84559291D64B100AF407A /* GetUTI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,15 +324,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C6C84547291AB2E800AF407A /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-algorithms.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		C6C8454C291AB58200AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+		C6C8455A291D727D00AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
 			requirement = {
@@ -335,14 +335,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C6C84548291AB2E800AF407A /* Algorithms */ = {
+		C6C84562291E570C00AF407A /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C6C84547291AB2E800AF407A /* XCRemoteSwiftPackageReference "swift-algorithms" */;
-			productName = Algorithms;
-		};
-		C6C8454D291AB58200AF407A /* ArgumentParser */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C6C8454C291AB58200AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			package = C6C8455A291D727D00AF407A /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
 		};
 /* End XCSwiftPackageProductDependency section */
