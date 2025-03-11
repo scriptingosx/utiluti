@@ -17,5 +17,7 @@ struct UtilUTI: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "utiluti",
     abstract: "Read and set default URL scheme and file type handlers.",
-    subcommands: subCommands)
+    version: "1.0",
+    subcommands: subCommands
+  )
 }
