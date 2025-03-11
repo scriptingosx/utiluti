@@ -1,6 +1,6 @@
 # utiluti
 
-The macOS command line utility to work with default apps.
+macOS command line utility to work with default apps.
 
 ## What it does
 
