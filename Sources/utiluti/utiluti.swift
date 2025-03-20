@@ -8,7 +8,7 @@ import ArgumentParser
 struct UtilUTI: ParsableCommand {
   static let subCommands: [ParsableCommand.Type] = {
     if #available(macOS 11.0, *) {
-      return [URLCommands.self, TypeCommands.self, GetUTI.self]
+        return [URLCommands.self, TypeCommands.self, GetUTI.self, AppCommands.self]
     } else {
       return [URLCommands.self, TypeCommands.self]
     }
@@ -17,7 +17,7 @@ struct UtilUTI: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "utiluti",
     abstract: "Read and set default URL scheme and file type handlers.",
-    version: "1.0",
+    version: "1.1",
     subcommands: subCommands
   )
 }
