@@ -13,7 +13,7 @@ struct AppCommands: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "app",
         abstract: "list uniform types identifiers and url schemes associated with an app",
-        subcommands: [ Types.self ]
+        subcommands: [ Types.self, Schemes.self ]
     )
     
     struct Types: ParsableCommand {
@@ -53,4 +53,42 @@ struct AppCommands: ParsableCommand {
             }
         }
     }
+    
+    struct Schemes: ParsableCommand {
+        static let configuration
+        = CommandConfiguration(abstract: "List the urls schemes this app can open")
+        
+        @Argument(help:ArgumentHelp("the app identifier", valueName: "app-identifier"))
+        var appID: String
+        
+        @Flag(name: .shortAndLong,
+              help: "show more information")
+        var verbose: Bool = false
+        
+        func run() {
+            guard
+                let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: appID),
+                let appBundle = Bundle(url: appURL),
+                let infoDictionary = appBundle.infoDictionary,
+                let urlSchemes: [[String: Any]] = infoDictionary["CFBundleURLTypes"] as? [[String: Any]]
+            else {
+                Self.exit(withError: ExitCode(7))
+            }
+            
+            for docType in urlSchemes {
+                guard
+                    let name = docType["CFBundleURLName"] as? String,
+                    let schemes = docType["CFBundleURLSchemes"] as? [String]
+                else { continue }
+                for type in schemes {
+                    if verbose {
+                        print("\(type) - \(name)")
+                    } else {
+                        print(type)
+                    }
+                }
+            }
+        }
+    }
+
 }

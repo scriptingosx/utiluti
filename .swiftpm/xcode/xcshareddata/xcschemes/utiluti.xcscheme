@@ -56,11 +56,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "types"
+            argument = "schemes"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "com.apple.textedit"
+            argument = "com.apple.safari"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
