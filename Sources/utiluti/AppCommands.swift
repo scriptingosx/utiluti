@@ -40,12 +40,11 @@ struct AppCommands: ParsableCommand {
             for docType in docTypes {
                 guard
                     let name = docType["CFBundleTypeName"] as? String,
-                    let role = docType["CFBundleTypeRole"] as? String,
                     let types = docType["LSItemContentTypes"] as? [String]
                 else { continue }
                 for type in types {
                     if verbose {
-                        print("\(type) - \(name) (\(role))")
+                        print("\(type) - \(name)")
                     } else {
                         print(type)
                     }
