@@ -7,6 +7,7 @@
 
 import Foundation
 import ArgumentParser
+import UniformTypeIdentifiers
 import AppKit // for NSWorkspace
 
 struct AppCommands: ParsableCommand {
@@ -39,16 +40,34 @@ struct AppCommands: ParsableCommand {
             
             for docType in docTypes {
                 guard
-                    let name = docType["CFBundleTypeName"] as? String,
-                    let types = docType["LSItemContentTypes"] as? [String]
+                    let name = docType["CFBundleTypeName"] as? String
                 else { continue }
+              if let types = docType["LSItemContentTypes"] as? [String] {
                 for type in types {
-                    if verbose {
-                        print("\(type) - \(name)")
-                    } else {
-                        print(type)
-                    }
+                  if verbose {
+                    print("\(type) - \(name)")
+                  } else {
+                    print(type)
+                  }
                 }
+              }
+              if let extensions = docType["CFBundleTypeExtensions"] as? [String] {
+                for ext in extensions {
+                  guard let utype = UTType(filenameExtension: ext) else {
+                    Self.exit(withError: ExitCode(3))
+                  }
+
+                  if utype.isDynamic {
+                    print("<unknown extension: \(ext)>")
+                  }
+
+                  if verbose {
+                    print("\(utype.identifier) - \(name)")
+                  } else {
+                    print(utype.identifier)
+                  }
+                }
+              }
             }
         }
     }
