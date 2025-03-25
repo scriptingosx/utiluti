@@ -14,7 +14,11 @@ struct GetUTI: ParsableCommand {
   static let configuration
   = CommandConfiguration(abstract: "Get the type identifier (UTI) for a file extension")
   
-  @Argument(help: "file extension") var fileExtension: String
+  @Argument(help: "file extension")
+  var fileExtension: String
+  
+  @Flag(help: "show dynamic identifiers")
+  var showDynamic = false
   
   func run() {
     guard let utype = UTType(filenameExtension: fileExtension) else {
@@ -22,10 +26,11 @@ struct GetUTI: ParsableCommand {
     }
     
     if utype.identifier.hasPrefix("dyn.") {
-      print("<unknown extension>")
-      Self.exit(withError: ExitCode(1))
+      if showDynamic {
+        print(utype.identifier)
+      }
+    } else {
+      print(utype.identifier)
     }
-    
-    print(utype.identifier)
   }
 }
