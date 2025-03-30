@@ -12,13 +12,21 @@ struct URLCommands: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "url",
     abstract: "Manipulate default URL scheme handlers",
-    subcommands: [ Get.self, List.self, Set.self],
-    defaultSubcommand: Get.self)
+    subcommands: [
+      Get.self,
+      List.self,
+      Set.self
+    ],
+    defaultSubcommand: Get.self
+  )
   
   struct URLScheme: ParsableArguments {
-    @Argument(help: ArgumentHelp(
-      "the url scheme, e.g. 'http' or 'mailto'",
-      valueName: "scheme"))
+    @Argument(
+      help: ArgumentHelp(
+        "the url scheme, e.g. 'http' or 'mailto'",
+        valueName: "scheme"
+      )
+    )
     var value: String
   }
   

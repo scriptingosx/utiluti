@@ -9,7 +9,6 @@ import Foundation
 import ArgumentParser
 import UniformTypeIdentifiers
 
-@available(macOS 11.0, *)
 struct GetUTI: ParsableCommand {
   static let configuration
   = CommandConfiguration(abstract: "Get the type identifier (UTI) for a file extension")

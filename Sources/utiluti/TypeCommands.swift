@@ -10,19 +10,17 @@ import ArgumentParser
 import UniformTypeIdentifiers
 
 struct TypeCommands: ParsableCommand {
-  
-  static var subCommands: [ParsableCommand.Type] {
-    if #available(macOS 11.0, *) {
-      return [Get.self, List.self, Set.self, Info.self, FileExtensions.self]
-    } else {
-      return[Get.self, List.self, Set.self]
-    }
-  }
-  
+
   static let configuration = CommandConfiguration(
     commandName: "type",
     abstract: "Manipulate default file type handlers",
-    subcommands: subCommands,
+    subcommands: [
+      Get.self,
+      List.self,
+      Set.self,
+      Info.self,
+      FileExtensions.self
+    ],
     defaultSubcommand: Get.self
   )
   
@@ -106,7 +104,6 @@ struct TypeCommands: ParsableCommand {
     }
   }
   
-  @available(macOS 11.0, *)
   struct FileExtensions: ParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "prints the file extensions for the given type identifier")
@@ -124,7 +121,6 @@ struct TypeCommands: ParsableCommand {
     }
   }
 
-  @available(macOS 11.0, *)
   struct Info: ParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "prints information for the given type identifier")

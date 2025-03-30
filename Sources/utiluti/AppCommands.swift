@@ -14,7 +14,10 @@ struct AppCommands: ParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "app",
     abstract: "list uniform types identifiers and url schemes associated with an app",
-    subcommands: [ Types.self, Schemes.self ]
+    subcommands: [
+      Types.self,
+      Schemes.self
+    ]
   )
   
   struct Types: ParsableCommand {
