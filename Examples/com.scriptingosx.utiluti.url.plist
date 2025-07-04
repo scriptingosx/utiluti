@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>feed</key>
+	<string>com.ranchero.NetNewsWire-Evergreen</string>
+	<key>http</key>
+	<string>org.mozilla.firefox</string>
+	<key>mailto</key>
+	<string>com.microsoft.Outlook</string>
+</dict>
+</plist>

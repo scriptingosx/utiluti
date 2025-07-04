@@ -9,13 +9,14 @@ struct UtilUTI: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "utiluti",
     abstract: "Read and set default URL scheme and file type handlers.",
-    version: "1.1",
+    version: "1.2dev",
     subcommands: [
       URLCommands.self,
       TypeCommands.self,
       GetUTI.self,
       AppCommands.self,
-      FileCommands.self
+      FileCommands.self,
+      ManageCommand.self
     ]
   )
 }
