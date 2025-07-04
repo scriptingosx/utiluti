@@ -26,26 +26,28 @@ struct ManageCommand: ParsableCommand {
   @Flag(help: "includes unmanaged (local) keys")
   var includeUnmanaged = false
 
-  func dictionary(forFile path: String?, orDomain domain: String) throws -> [String:Any] {
-    if let path {
-      guard let dictFromFile = NSDictionary(contentsOfFile: path) as? [String:Any] else {
-        throw ExitCode(4)
-      }
-      return dictFromFile
-    } else {
-      guard let prefs = Preferences(suiteName: domain) else { throw ExitCode(3)}
-
-      let keys = includeUnmanaged ? prefs.nonGlobalKeys : prefs.managedKeys
-      return prefs.dictionaryRepresentation(forKeys: keys)
+  func dictionary(forFile path: String) throws -> [String:Any] {
+    if !FileManager.default.fileExists(atPath: path) {
+      print("no file at \(path)")
+      throw ExitCode(7)
     }
+
+    guard let dictFromFile = NSDictionary(contentsOfFile: path) as? [String:Any] else {
+      throw ExitCode(4)
+    }
+    return dictFromFile
   }
 
-  func manageTypes() throws {
-    let types = try dictionary(
-      forFile: typeFile,
-      orDomain: "com.scriptingosx.utiluti.type"
-    )
+  func dictionary(fromDefaults domain: String) throws -> [String:Any] {
+    guard let prefs = Preferences(suiteName: domain)
+    else { throw ExitCode(3)}
 
+    var keys = Set(prefs.managedKeys)
+    if includeUnmanaged { keys.formUnion(prefs.nonGlobalKeys) }
+    return prefs.dictionaryRepresentation(forKeys: Array(keys))
+  }
+
+  func manageTypes(types: [String:Any]) throws {
     for (uti, value) in types {
       guard let bundleID = value as? String
       else {
@@ -62,12 +64,7 @@ struct ManageCommand: ParsableCommand {
     }
   }
 
-  func manageURLs() throws {
-    let urls = try dictionary(
-      forFile: urlFile,
-      orDomain: "com.scriptingosx.utiluti.url"
-    )
-
+  func manageURLs(urls: [String:Any]) throws {
     for (urlScheme, value) in urls {
       guard let bundleID = value as? String
       else {
@@ -86,8 +83,25 @@ struct ManageCommand: ParsableCommand {
   }
 
   func run() throws {
-    try manageTypes()
-    try manageURLs()
+    if typeFile == nil && urlFile == nil {
+      // neither file path is set, read from defaults
+      let types = try dictionary(fromDefaults: "com.scriptingosx.utiluti.type")
+      try manageTypes(types: types)
+
+      let urls = try dictionary(fromDefaults: "com.scriptingosx.utiluti.url")
+      try manageURLs(urls: urls)
+    } else {
+      // one or both of the file paths are set
+      if let typeFile {
+        let types = try dictionary(forFile: typeFile)
+        try manageTypes(types: types)
+      }
+
+      if let urlFile {
+        let urls = try dictionary(forFile: urlFile)
+        try manageURLs(urls: urls)
+      }
+    }
   }
 }
 

@@ -10,7 +10,8 @@ You can use `utiluti` to inspect and modify default apps for url schemes and fil
 
 - `utiluti` should run as the current user
 
-- when you attempt to set the default app for the `http` url scheme, macOS will prompt the user for confirmation. The user has the option to reject the change. The user must make a selection for the tool to continue. Consider this when using `utiluti` for automation. (See [macadmins/default-browser](https://github.com/macadmins/default-browser/tree/main) for an alternative)
+- when you attempt to set the default app for the `http` url scheme, macOS will prompt the user for confirmation. The user has the option to reject the change. The user must make a selection for the tool to continue. Consider this when using `utiluti` for automation. You should wrap the script in some other UI to prepare the user for the dialog.
+  (See [macadmins/default-browser](https://github.com/macadmins/default-browser/tree/main) for an alternative solution)
 
 - macOS connects the `http` and `https` url schemes and the `public.html` UTI. You can only set the default app for `http`. Then the default app for `https` and the `public.html` type will be set to the same app. Attempting to change the default apps for `https` or `public.html` independently will result in an error.
 
@@ -203,4 +204,162 @@ Set the default app for this file:
 ```sh
 $ utiluti file set ReadMe.md com.apple.dt.xcode
 set com.apple.dt.xcode for ReadMe.md
+```
+
+## Setting multiple defaults
+
+The `manage` verb reads multiple default app assignments from files or from user defaults/configuration profiles.
+
+### Reading from files
+
+The file format is an XML Property list. You will need two separate files for assigning URL schemes (`--url-file`) and one for assigning file types/UTIs (`--type-file`).
+
+The root object of the property list is a `dict`, each key will be the url scheme or UTI, respectively. The value is the application bundle identifier for the default app that should be set.
+
+```sh
+$ utiluti manage --type-file types.plist
+set com.fatcatsoftware.pledpro for com.apple.property-list
+set com.barebones.BBEdit for public.plain-text
+set com.barebones.BBEdit for public.shell-script
+```
+
+```sh
+$ utiluti manage --url-file urls.plist
+set com.microsoft.Outlook for mailto
+set com.ranchero.NetNewsWire-Evergreen for feed
+```
+
+```sh
+$ utiluti manage --type-file types.plist --url-file urls.plist
+set com.fatcatsoftware.pledpro for com.apple.property-list
+set com.barebones.BBEdit for public.plain-text
+set com.barebones.BBEdit for public.shell-script
+set com.microsoft.Outlook for mailto
+set com.ranchero.NetNewsWire-Evergreen for feed
+```
+
+You can have either the `--type-file` or the `--url-file` or both. When only file is given, `utiluti` will _not_ read additional settings from defaults.
+
+**Note:** You can add a default app for the `http` url scheme this way, but it will show the user confirmation dialog when the default browser changes. See [the notes above](#important-notes).
+
+Example (URL Schemes):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>feed</key>
+	<string>com.ranchero.NetNewsWire-Evergreen</string>
+	<key>mailto</key>
+	<string>com.microsoft.Outlook</string>
+</dict>
+</plist>
+```
+
+Example (UTIs):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.property-list</key>
+	<string>com.fatcatsoftware.pledpro</string>
+	<key>public.plain-text</key>
+	<string>com.barebones.BBEdit</string>
+	<key>public.shell-script</key>
+	<string>com.barebones.BBEdit</string>
+</dict>
+</plist>
+```
+
+### From defaults and managed preferences
+
+For managed deployments, the settings can be read from a configuration profile.
+
+```sh
+$ utiluti manage
+set com.fatcatsoftware.pledpro for com.apple.property-list
+set com.barebones.BBEdit for public.plain-text
+set com.barebones.BBEdit for public.shell-script
+set com.microsoft.Outlook for mailto
+set com.ranchero.NetNewsWire-Evergreen for feed
+```
+
+Example (configuration profile):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDisplayName</key>
+			<string>Utiluti URL Schemes</string>
+			<key>PayloadIdentifier</key>
+			<string>com.scriptingosx.utiluti.url</string>
+			<key>PayloadType</key>
+			<string>com.scriptingosx.utiluti.url</string>
+			<key>PayloadUUID</key>
+			<string>C6BE539F-85CC-424B-BD10-6160A9B87507</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>feed</key>
+			<string>com.ranchero.NetNewsWire-Evergreen</string>
+			<key>mailto</key>
+			<string>com.microsoft.Outlook</string>
+		</dict>
+		<dict>
+			<key>PayloadDisplayName</key>
+			<string>Utiluti UTIs</string>
+			<key>PayloadIdentifier</key>
+			<string>com.scriptingosx.utiluti.type</string>
+			<key>PayloadType</key>
+			<string>com.scriptingosx.utiluti.type</string>
+			<key>PayloadUUID</key>
+			<string>21078E7C-9C38-45F8-92C1-DFF7FBD77405</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>com.apple.property-list</key>
+			<string>com.fatcatsoftware.pledpro</string>
+			<key>public.plain-text</key>
+			<string>com.barebones.BBEdit</string>
+			<key>public.shell-script</key>
+			<string>com.barebones.BBEdit</string>
+		</dict>
+	</array>
+	<key>PayloadDisplayName</key>
+	<string>Utiluti</string>
+	<key>PayloadIdentifier</key>
+	<string>com.scriptingosx.utiluti</string>
+	<key>PayloadScope</key>
+	<string>System</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>E0A43215-6114-413B-BB0B-1478AB79181B</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>
+```
+
+By default, `utiluti manage` will _ignore_ unmanaged defaults, i.e. defaults that come from local settings rather than configuration profiles. You can override this behavior with the `--include-unmanaged` option.
+
+```sh
+$ defaults write com.scriptingosx.utiluti.type net.daringfireball.markdown com.barebones.BBEdit
+$ defaults read com.scriptingosx.utiluti.type
+{
+    "net.daringfireball.markdown" = "com.barebones.BBEdit";
+}
+$ utiluti manage --include-unmanaged
+set com.fatcatsoftware.pledpro for com.apple.property-list
+set com.barebones.BBEdit for net.daringfireball.markdown
+set com.barebones.BBEdit for public.shell-script
+set com.barebones.BBEdit for public.plain-text
+set com.ranchero.NetNewsWire-Evergreen for feed
+set com.microsoft.Outlook for mailto
 ```

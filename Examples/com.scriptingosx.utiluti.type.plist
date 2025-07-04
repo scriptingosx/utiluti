@@ -4,8 +4,6 @@
 <dict>
 	<key>com.apple.property-list</key>
 	<string>com.fatcatsoftware.pledpro</string>
-	<key>net.daringfireball.markdown</key>
-	<string>com.barebones.BBEdit</string>
 	<key>public.plain-text</key>
 	<string>com.barebones.BBEdit</string>
 	<key>public.shell-script</key>
