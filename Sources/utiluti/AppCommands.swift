@@ -10,7 +10,7 @@ import ArgumentParser
 import UniformTypeIdentifiers
 import AppKit // for NSWorkspace
 
-struct AppCommands: ParsableCommand {
+struct AppCommands: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "app",
     abstract: "list uniform types identifiers and url schemes associated with an app",
@@ -20,7 +20,7 @@ struct AppCommands: ParsableCommand {
     ]
   )
   
-  struct Types: ParsableCommand {
+  struct Types: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "List the uniform type identifiers this app can open")
     
@@ -31,7 +31,7 @@ struct AppCommands: ParsableCommand {
           help: "show more information")
     var verbose: Bool = false
     
-    func run() {
+    func run() async {
       guard
         let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: appID),
         let appBundle = Bundle(url: appURL),
@@ -82,7 +82,7 @@ struct AppCommands: ParsableCommand {
     }
   }
   
-  struct Schemes: ParsableCommand {
+  struct Schemes: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "List the urls schemes this app can open")
     
@@ -93,7 +93,7 @@ struct AppCommands: ParsableCommand {
           help: "show more information")
     var verbose: Bool = false
     
-    func run() {
+    func run() async {
       guard
         let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: appID),
         let appBundle = Bundle(url: appURL),

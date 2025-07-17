@@ -9,7 +9,7 @@ import Foundation
 import ArgumentParser
 import UniformTypeIdentifiers
 
-struct GetUTI: ParsableCommand {
+struct GetUTI: AsyncParsableCommand {
   static let configuration
   = CommandConfiguration(abstract: "Get the type identifier (UTI) for a file extension")
   
@@ -19,7 +19,7 @@ struct GetUTI: ParsableCommand {
   @Flag(help: "show dynamic identifiers")
   var showDynamic = false
   
-  func run() {
+  func run() async {
     guard let utype = UTType(filenameExtension: fileExtension) else {
       Self.exit(withError: ExitCode(3))
     }

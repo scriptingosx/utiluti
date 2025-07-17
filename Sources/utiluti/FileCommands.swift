@@ -12,7 +12,7 @@ import ArgumentParser
 import UniformTypeIdentifiers
 import AppKit // for NSWorkspace
 
-struct FileCommands: ParsableCommand {
+struct FileCommands: AsyncParsableCommand {
   
   static var subCommands: [ParsableCommand.Type] {
     if #available(macOS 12.0, *) {
@@ -28,21 +28,21 @@ struct FileCommands: ParsableCommand {
     subcommands: subCommands
   )
   
-  struct GetUTI: ParsableCommand {
+  struct GetUTI: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "get the uniform type identifier of a file")
     
     @Argument(help:ArgumentHelp("file path", valueName: "path"))
     var path: String
     
-    func run() {
+    func run() async {
       let url = URL(fileURLWithPath: path)
       let typeIdentifier = try? url.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier
       print(typeIdentifier ?? "<unknown>")
     }
   }
   
-  struct App: ParsableCommand {
+  struct App: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "get the app that will open this file")
     
@@ -54,7 +54,7 @@ struct FileCommands: ParsableCommand {
       valueName: "bundleID"))
     var bundleID = false
     
-    func run() {
+    func run() async {
       let url = URL(fileURLWithPath: path)
       if let app = NSWorkspace.shared.urlForApplication(toOpen: url) {
         if bundleID {
@@ -73,7 +73,7 @@ struct FileCommands: ParsableCommand {
   }
   
   @available(macOS 12, *)
-  struct ListApps: ParsableCommand {
+  struct ListApps: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "get all app that can open this file")
     
@@ -85,7 +85,7 @@ struct FileCommands: ParsableCommand {
       valueName: "bundleID"))
     var bundleID = false
     
-    func run() {
+    func run() async {
       let url = URL(fileURLWithPath: path)
       let apps = NSWorkspace.shared.urlsForApplications(toOpen: url)
       for app in apps {

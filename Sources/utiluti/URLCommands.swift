@@ -8,7 +8,7 @@
 import Foundation
 import ArgumentParser
 
-struct URLCommands: ParsableCommand {
+struct URLCommands: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "url",
     abstract: "Manipulate default URL scheme handlers",
@@ -37,14 +37,14 @@ struct URLCommands: ParsableCommand {
     var bundleID = false
   }
   
-  struct Get: ParsableCommand {
+  struct Get: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "Get the path to the default application.")
     
     @OptionGroup var scheme: URLScheme
     @OptionGroup var bundleID: IdentifierFlag
     
-    func run() {
+    func run() async {
       guard let appURL = LSKit.defaultAppURL(forScheme: scheme.value) else {
         print("<no default app found>")
         Self.exit(withError: ExitCode(1))
@@ -60,14 +60,14 @@ struct URLCommands: ParsableCommand {
     }
   }
   
-  struct List: ParsableCommand {
+  struct List: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "List all applications that can handle this URL scheme.")
     
     @OptionGroup var scheme: URLScheme
     @OptionGroup var bundleID: IdentifierFlag
 
-    func run() {
+    func run() async {
       let appURLs = LSKit.appURLs(forScheme: scheme.value)
       
       for appURL in appURLs {
@@ -84,7 +84,7 @@ struct URLCommands: ParsableCommand {
     }
   }
   
-  struct Set: ParsableCommand {
+  struct Set: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "Set the default app for this URL scheme.")
     
@@ -93,8 +93,8 @@ struct URLCommands: ParsableCommand {
                                 valueName: "bundleID"))
     var identifier: String
     
-    func run() {
-      let result = LSKit.setDefaultApp(identifier: identifier, forScheme: scheme.value)
+    func run() async {
+      let result = await LSKit.setDefaultApp(identifier: identifier, forScheme: scheme.value)
       
       if result == 0 {
         print("set \(identifier) for \(scheme.value)")

@@ -65,27 +65,21 @@ struct LSKit {
    - scheme: url scheme (excluding the `:` or `/`, e.g. `http`)
    - Returns: OSStatus (discardable)
    */
-  @discardableResult static func setDefaultApp(identifier: String, forScheme scheme: String) -> OSStatus {
+  @discardableResult static func setDefaultApp(identifier: String, forScheme scheme: String) async -> OSStatus {
     if #available(macOS 12, *) {
       // print("running on macOS 12, using NSWorkspace")
-      let ws = NSWorkspace.shared
-      
-      // since the new NSWorkspace function is asynchronous we have to use semaphores here
-      let semaphore = DispatchSemaphore(value: 0)
-      var errCode: OSStatus = 0
-      
-      guard let appURL = ws.urlForApplication(withBundleIdentifier: identifier) else { return 1 }
-      ws.setDefaultApplication(at: appURL, toOpenURLsWithScheme: scheme) { err in
-        // err is an NSError wrapped in a CocoaError
-        if let err = err as? CocoaError {
-          if let underlyingError = err.errorUserInfo["NSUnderlyingError"] as? NSError {
-            errCode = OSStatus(clamping: underlyingError.code)
-          }
+      do {
+        let ws = NSWorkspace.shared
+        guard let appURL = ws.urlForApplication(withBundleIdentifier: identifier) else { return 1 }
+        try await ws.setDefaultApplication(at: appURL, toOpenURLsWithScheme: scheme)
+        return 0
+      } catch {
+        if let err = error as? CocoaError, let underlyingError = err.errorUserInfo["NSUnderlyingError"] as? NSError {
+          return OSStatus(clamping: underlyingError.code)
+        } else {
+          return 1
         }
-        semaphore.signal()
       }
-      semaphore.wait()
-      return errCode
     } else {
       return LSSetDefaultHandlerForURLScheme(scheme as CFString, identifier as CFString)
     }
@@ -147,31 +141,26 @@ struct LSKit {
    - forTypeIdentifier: uniform type identifier ( e.g. `public.html`)
    - Returns: OSStatus (discardable)
    */
-  @discardableResult static func setDefaultApp(identifier: String, forTypeIdentifier utidentifier: String) -> OSStatus {
+  @discardableResult static func setDefaultApp(identifier: String, forTypeIdentifier utidentifier: String) async -> OSStatus {
     if #available(macOS 12, *) {
       // print("running on macOS 12, using NSWorkspace")
       guard let utype = UTType(utidentifier) else {
         return 1
       }
-
-      let ws = NSWorkspace.shared
       
-      // since the new NSWorkspace function is asynchronous we have to use semaphores here
-      let semaphore = DispatchSemaphore(value: 0)
-      var errCode: OSStatus = 0
-      
-      guard let appURL = ws.urlForApplication(withBundleIdentifier: identifier) else { return 1 }
-      ws.setDefaultApplication(at: appURL, toOpen: utype) { err in
+      do {
+        let ws = NSWorkspace.shared
+        guard let appURL = ws.urlForApplication(withBundleIdentifier: identifier) else { return 1 }
+        try await ws.setDefaultApplication(at: appURL, toOpen: utype)
+        return 0
+      } catch {
         // err is an NSError wrapped in a CocoaError
-        if let err = err as? CocoaError {
-          if let underlyingError = err.errorUserInfo["NSUnderlyingError"] as? NSError {
-            errCode = OSStatus(clamping: underlyingError.code)
-          }
+        if let err = error as? CocoaError, let underlyingError = err.errorUserInfo["NSUnderlyingError"] as? NSError {
+          return OSStatus(clamping: underlyingError.code)
+        } else {
+          return 1
         }
-        semaphore.signal()
       }
-      semaphore.wait()
-      return errCode
     } else {
       return LSSetDefaultRoleHandlerForContentType(utidentifier as CFString, .all, identifier as CFString)
     }

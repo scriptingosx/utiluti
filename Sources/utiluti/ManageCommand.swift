@@ -8,7 +8,7 @@
 import Foundation
 import ArgumentParser
 
-struct ManageCommand: ParsableCommand {
+struct ManageCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "manage",
     abstract: "read and apply settings from a managed preferences or a file"
@@ -47,7 +47,7 @@ struct ManageCommand: ParsableCommand {
     return prefs.dictionaryRepresentation(forKeys: Array(keys))
   }
 
-  func manageTypes(types: [String:Any]) throws {
+  func manageTypes(types: [String:Any]) async throws {
     for (uti, value) in types {
       guard let bundleID = value as? String
       else {
@@ -55,7 +55,7 @@ struct ManageCommand: ParsableCommand {
         continue
       }
 
-      let result = LSKit.setDefaultApp(identifier: bundleID, forTypeIdentifier: uti)
+      let result = await LSKit.setDefaultApp(identifier: bundleID, forTypeIdentifier: uti)
       if result == 0 {
         print("set \(bundleID) for \(uti)")
       } else {
@@ -64,7 +64,7 @@ struct ManageCommand: ParsableCommand {
     }
   }
 
-  func manageURLs(urls: [String:Any]) throws {
+  func manageURLs(urls: [String:Any]) async throws {
     for (urlScheme, value) in urls {
       guard let bundleID = value as? String
       else {
@@ -72,7 +72,7 @@ struct ManageCommand: ParsableCommand {
         continue
       }
 
-      let result = LSKit.setDefaultApp(identifier: bundleID, forScheme: urlScheme)
+      let result = await LSKit.setDefaultApp(identifier: bundleID, forScheme: urlScheme)
 
       if result == 0 {
         print("set \(bundleID) for \(urlScheme)")
@@ -82,24 +82,24 @@ struct ManageCommand: ParsableCommand {
     }
   }
 
-  func run() throws {
+  func run() async throws {
     if typeFile == nil && urlFile == nil {
       // neither file path is set, read from defaults
       let types = try dictionary(fromDefaults: "com.scriptingosx.utiluti.type")
-      try manageTypes(types: types)
+      try await manageTypes(types: types)
 
       let urls = try dictionary(fromDefaults: "com.scriptingosx.utiluti.url")
-      try manageURLs(urls: urls)
+      try await manageURLs(urls: urls)
     } else {
       // one or both of the file paths are set
       if let typeFile {
         let types = try dictionary(forFile: typeFile)
-        try manageTypes(types: types)
+        try await manageTypes(types: types)
       }
 
       if let urlFile {
         let urls = try dictionary(forFile: urlFile)
-        try manageURLs(urls: urls)
+        try await manageURLs(urls: urls)
       }
     }
   }
