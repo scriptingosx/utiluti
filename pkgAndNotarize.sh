@@ -37,7 +37,7 @@ binary_names=( "utiluti" )
 pkg_name="$product_name"
 identifier="com.scriptingosx.${product_name}"
 min_os_version="11.5"
-install_location="/usr/local/bin/"
+install_location="/"
 
 
 # don't modify below here
@@ -66,7 +66,6 @@ if [[ ! -d $build_dir ]]; then
     exit 3
 fi
 
-
 binary_source_path="${build_dir}/apple/Products/Release/${binary_names[1]}"
 
 if [[ ! -e $binary_source_path ]]; then
@@ -82,9 +81,25 @@ if [[ $version == "" ]]; then
     exit 5
 fi
 
+# generate man page
+if ! swift package plugin generate-manual; then
+    echo "error generating man page"
+    exit 11
+fi
+
+manpage_source_path="${build_dir}/plugins/GenerateManual/outputs/${binary_names[1]}/${binary_names[1]}.1"
+
+if [[ ! -e $manpage_source_path ]]; then
+    echo "cannot find manpage at $manpage_source_path"
+    exit 11
+fi
+
 component_path="${build_dir}/${pkg_name}.pkg"
 product_path="${build_dir}/${pkg_name}-${version}.pkg"
 pkgroot="${build_dir}/pkgroot"
+
+binary_location="${pkgroot}/usr/local/bin/"
+manpage_location="${pkgroot}/usr/local/share/man/man1/"
 
 echo
 echo "### Signing, Packaging and Notarizing '$product_name'"
@@ -98,18 +113,22 @@ if [[ ! -d $pkgroot ]]; then
     mkdir -p $pkgroot
 fi
 
+mkdir -p $binary_location
+mkdir -p $manpage_location
+
+# copy and sign the binaries
+
 for binary in ${binary_names}; do
   binary_source_path="${build_dir}/apple/Products/Release/${binary}"
 
   if [[ ! -f $binary_source_path ]]; then
-      echo "can't find binary at $binary_path"
+      echo "can't find binary at $binary_source_path"
       exit 6
   fi
 
-  cp $binary_source_path $pkgroot
-  #scripts_dir="$SRCROOT/scripts"
+  cp $binary_source_path $binary_location
 
-  binary_path=$pkgroot/$binary
+  binary_path=${binary_location}/${binary}
 
   # sign the binary
   echo
@@ -125,6 +144,11 @@ for binary in ${binary_names}; do
   fi
 
 done
+
+# copy the manpage
+echo
+echo "copying man page"
+cp $manpage_source_path $manpage_location
 
 # create the component pkg
 echo
