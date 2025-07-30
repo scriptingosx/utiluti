@@ -62,9 +62,12 @@ struct TypeCommands: AsyncParsableCommand {
   }
   
   struct List: AsyncParsableCommand {
-    static let configuration
-    = CommandConfiguration(abstract: "List all applications that can handle this type identifier.")
-    
+    static let configuration = CommandConfiguration(
+      commandName: "list",
+      abstract: "List all applications that can handle this type identifier.",
+      aliases: ["ls"]
+    )
+
     @OptionGroup var utidentifier: UTIdentifier
     @OptionGroup var bundleID: IdentifierFlag
 

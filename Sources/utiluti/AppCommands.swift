@@ -11,14 +11,20 @@ import UniformTypeIdentifiers
 import AppKit // for NSWorkspace
 
 struct AppCommands: AsyncParsableCommand {
+
+  static var subCommands: [ParsableCommand.Type] {
+    if #available(macOS 12.0, *) {
+      [Types.self, Schemes.self, BundleID.self, ForBundleID.self, Version.self]
+    } else {
+      [Types.self, Schemes.self, BundleID.self, Version.self]
+    }
+  }
+
   static let configuration = CommandConfiguration(
     commandName: "app",
     abstract: "list uniform types identifiers and url schemes associated with an app",
-    subcommands: [
-      Types.self,
-      Schemes.self
-    ]
-  )
+    subcommands: subCommands
+   )
   
   struct Types: AsyncParsableCommand {
     static let configuration
@@ -115,6 +121,69 @@ struct AppCommands: AsyncParsableCommand {
             print(type)
           }
         }
+      }
+    }
+  }
+
+  struct BundleID: AsyncParsableCommand {
+    static let configuration
+    = CommandConfiguration(
+      commandName: "identifier",
+      abstract: "Show the bundle identifier for an app at the path",
+      aliases: ["id"]
+    )
+
+    @Argument(help:ArgumentHelp("path to the app", valueName: "path"))
+    var path: String
+
+    func run() async {
+      guard
+        let bundle = Bundle(path: path),
+        let bundleID = bundle.bundleIdentifier
+      else {
+        Self.exit(withError: ExitCode(11))
+      }
+      print(bundleID)
+    }
+  }
+
+  struct Version: AsyncParsableCommand {
+    static let configuration
+    = CommandConfiguration(
+      commandName: "version",
+      abstract: "Show the version for an app at the path",
+    )
+
+    @Argument(help:ArgumentHelp("path to the app", valueName: "path"))
+    var path: String
+
+    func run() async {
+      guard
+        let bundle = Bundle(path: path),
+        let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? bundle.infoDictionary?["CFBundleVersion"] as? String
+      else {
+        Self.exit(withError: ExitCode(12))
+      }
+      print(version)
+    }
+  }
+
+  @available(macOS 12, *)
+  struct ForBundleID: AsyncParsableCommand {
+    static let configuration
+    = CommandConfiguration(
+      commandName: "for-identifier",
+      abstract: "Show apps with the given bundle identifier",
+      aliases: ["for-id"]
+    )
+
+    @Argument(help:ArgumentHelp("the app identifier", valueName: "app-identifier"))
+    var appID: String
+
+    func run() async throws {
+      let apps = NSWorkspace.shared.urlsForApplications(withBundleIdentifier: appID)
+      for app in apps {
+        print(app.path)
       }
     }
   }

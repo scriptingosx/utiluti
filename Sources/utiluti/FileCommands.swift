@@ -74,9 +74,12 @@ struct FileCommands: AsyncParsableCommand {
   
   @available(macOS 12, *)
   struct ListApps: AsyncParsableCommand {
-    static let configuration
-    = CommandConfiguration(abstract: "get all app that can open this file")
-    
+    static let configuration = CommandConfiguration(
+      commandName: "list-apps",
+      abstract: "get all app that can open this file",
+      aliases: ["ls-apps", "list", "ls"]
+    )
+
     @Argument(help:ArgumentHelp("file path", valueName: "path"))
     var path: String
     

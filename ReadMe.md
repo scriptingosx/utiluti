@@ -15,27 +15,44 @@ You can use `utiluti` to inspect and modify default apps for url schemes and fil
 
 - macOS connects the `http` and `https` url schemes and the `public.html` UTI. You can only set the default app for `http`. Then the default app for `https` and the `public.html` type will be set to the same app. Attempting to change the default apps for `https` or `public.html` independently will result in an error.
 
+- many commands require the bundle identifier to specify an app. You can determine an app's bundle identifier with `utiluti` itself, `mdls`, `osascript`/AppleScript, or a GUI tool like [Apparency](https://www.mothersruin.com/software/Apparency/)
+
+```
+$ utiluti app id /Applications/Safari.app
+com.apple.Safari
+```
+
+```
+$ mdls -n kMDItemCFBundleIdentifier /Applications/Safari.app
+kMDItemCFBundleIdentifier = "com.apple.Safari"
+```
+
+```
+$ osascript -e 'id of app "Safari"'
+com.apple.Safari
+```
+
 ## URL schemes
 
 URL schemes are the part of the URL before the colon `:` which identify which app or protocol to use. E.g. `http`, `mailto`, `ssh`, etc.
 
 Get the current default app for a given url scheme:
 
-```sh
+```
 $ utiluti url mailto          
 /System/Applications/Mail.app
 ```
 
 Use the `--bundle-id` flag to receive the app's bundle identifier instead:
 
-```sh
+```
 $ utiluti url mailto --bundle-id     
 com.apple.mail
 ```
 
 List all apps registered for a given url scheme:
 
-```sh
+```
 $ utiluti url list mailto          
 /System/Applications/Mail.app
 /Applications/Microsoft Outlook.app
@@ -43,7 +60,7 @@ $ utiluti url list mailto
 
 Use the `--bundle-id` flag to receive the apps' bundle identifiers instead:
 
-```sh
+```
 $ utiluti url list mailto --bundle-id 
 com.apple.mail
 com.microsoft.Outlook
@@ -51,7 +68,7 @@ com.microsoft.Outlook
 
 Set the default app for a given URL scheme:
 
-```sh
+```
 $ utiluti url set mailto com.microsoft.Outlook
 set com.microsoft.Outlook for mailto
 ```
@@ -62,21 +79,21 @@ set com.microsoft.Outlook for mailto
 
 To get the UTI associated with a file extension, use `get-uti`:
 
-```sh
+```
 $ utiluti get-uti txt            
 public.plain-text
 ```
 
 Get the default application for a UTI:
 
-```sh
+```
 $ utiluti type public.plain-text
 /System/Applications/TextEdit.app
 ```
 
 List all applications registered for the given UTI:
 
-```sh
+```
 $ utiluti type list public.plain-text
 /System/Applications/TextEdit.app
 /Applications/Numbers.app
@@ -92,18 +109,18 @@ Add the `--bundle-id` flag to receive bundle identifiers instead of paths.
 
 Set the the default app for a given UTI:
 
-```sh
+```
 $ utiluti type set public.plain-text com.barebones.bbedit
 set com.barebones.bbedit for public.plain-text
 ```
 
-## Getting an App's declarations
+## Getting an App's declarations and other information
 
 `utiluti` can list the UTIs and url schemes an app has declared in their Info.plist:
 
 List the URL schemes for a given app with `app schemes`:
 
-```sh
+```
 $ utiluti app schemes com.apple.safari
 http
 https
@@ -113,7 +130,7 @@ x-safari-https
 
 List the UTIs and file extensions for a given app with `app types`
 
-```sh
+```
 $ utiluti app types com.apple.TextEdit
 public.rtf
 com.apple.rtfd
@@ -131,7 +148,7 @@ public.data
 
 Some apps declare file extensions instead of UTIs. In this case `utiluti` will prepend `file extension:`. If there is an associated UTI, it will be shown in parenthesis:
 
-```sh
+```
 $ utiluti app types com.apple.safari
 file extension: css (public.css)
 file extension: pdf (com.adobe.pdf)
@@ -171,27 +188,52 @@ file extension: heic (public.heic)
 file extension: jxl (public.jpeg-xl)
 ```
 
+Show an app's bundle identifier:
+
+```
+$ utiluti app id /Applications/Safari.app
+com.apple.Safari
+```
+
+Show an app's version:
+
+```
+$ utiluti app id /Applications/Safari.app
+18.5
+```
+
+List paths to applications for a given bundle identifier: (note that the output might have multiple lines, when there are multiple copies of the app, or be empty when there are no apps matching the identifier)
+
+```
+$ utiluti app for-id com.apple.notes
+/System/Applications/Notes.app
+```
+
+
+
+
+
 ## Default app for specific files
 
 macOS allows for a file to be assigned to an app different from the general default app for that file type. `utiluti` has the `file` verb to inspect or set the default app for a specific file.
 
 Get the UTI for a given file:
 
-```sh
+```
 $ utiluti file get-uti ReadMe.md
 net.daringfireball.markdown
 ```
 
 Get the app that will open the file when double-clicked:
 
-```sh
+```
 $utiluti file app ReadMe.md
 /System/Applications/TextEdit.app
 ```
 
 List all apps that can open the file:
 
-```sh
+```
 $ utiluti file list-apps ReadMe.md
 /System/Applications/TextEdit.app
 /Applications/Xcode.app
@@ -201,7 +243,7 @@ $ utiluti file list-apps ReadMe.md
 
 Set the default app for this file:
 
-```sh
+```
 $ utiluti file set ReadMe.md com.apple.dt.xcode
 set com.apple.dt.xcode for ReadMe.md
 ```
@@ -216,20 +258,20 @@ The file format is an XML Property list. You will need two separate files for as
 
 The root object of the property list is a `dict`, each key will be the url scheme or UTI, respectively. The value is the application bundle identifier for the default app that should be set.
 
-```sh
+```
 $ utiluti manage --type-file types.plist
 set com.fatcatsoftware.pledpro for com.apple.property-list
 set com.barebones.BBEdit for public.plain-text
 set com.barebones.BBEdit for public.shell-script
 ```
 
-```sh
+```
 $ utiluti manage --url-file urls.plist
 set com.microsoft.Outlook for mailto
 set com.ranchero.NetNewsWire-Evergreen for feed
 ```
 
-```sh
+```
 $ utiluti manage --type-file types.plist --url-file urls.plist
 set com.fatcatsoftware.pledpro for com.apple.property-list
 set com.barebones.BBEdit for public.plain-text
@@ -278,7 +320,7 @@ Example (UTIs):
 
 For managed deployments, the settings can be read from a configuration profile.
 
-```sh
+```
 $ utiluti manage
 set com.fatcatsoftware.pledpro for com.apple.property-list
 set com.barebones.BBEdit for public.plain-text
@@ -349,7 +391,7 @@ Example (configuration profile):
 
 By default, `utiluti manage` will _ignore_ unmanaged defaults, i.e. defaults that come from local settings rather than configuration profiles. You can override this behavior with the `--include-unmanaged` option.
 
-```sh
+```
 $ defaults write com.scriptingosx.utiluti.type net.daringfireball.markdown com.barebones.BBEdit
 $ defaults read com.scriptingosx.utiluti.type
 {

@@ -10,9 +10,11 @@ import ArgumentParser
 import UniformTypeIdentifiers
 
 struct GetUTI: AsyncParsableCommand {
-  static let configuration
-  = CommandConfiguration(abstract: "Get the type identifier (UTI) for a file extension")
-  
+  static let configuration = CommandConfiguration(
+    commandName: "get-uti",
+    abstract: "Get the type identifier (UTI) for a file extension"
+  )
+
   @Argument(help: "file extension")
   var fileExtension: String
   
