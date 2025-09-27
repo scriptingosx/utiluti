@@ -151,7 +151,7 @@ struct AppCommands: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(
       commandName: "version",
-      abstract: "Show the version for an app at the path",
+      abstract: "Show the version for an app at the path"
     )
 
     @Argument(help:ArgumentHelp("path to the app", valueName: "path"))
