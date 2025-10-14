@@ -156,7 +156,7 @@ echo "### building component pkg file"
 
 if ! pkgbuild --root $pkgroot \
          --identifier $identifier \
-         --version $version-$build_number \
+         --version $version \
          --install-location $install_location \
          --min-os-version $min_os_version \
          --compression latest \
@@ -174,7 +174,7 @@ echo "### building distribution pkg file"
 
 if ! productbuild --package "$component_path" \
                   --identifier "$identifier" \
-                  --version "$version-$build_number" \
+                  --version "$version" \
                   --sign "$installer_sign_cert" \
                   "$product_path"
 then
