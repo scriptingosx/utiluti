@@ -48,15 +48,13 @@ struct AppCommands: AsyncParsableCommand {
       }
       
       for docType in docTypes {
-        guard
-          let name = docType["CFBundleTypeName"] as? String
-        else { continue }
+        let name = docType["CFBundleTypeName"] as? String
         
         let types = docType["LSItemContentTypes"] as? [String] ?? []
         let extensions = docType["CFBundleTypeExtensions"] as? [String] ?? []
         
         for type in types {
-          if verbose {
+          if verbose, let name {
             print("\(type) - \(name)")
           } else {
             print(type)
@@ -78,7 +76,7 @@ struct AppCommands: AsyncParsableCommand {
             print(" (\(utype.identifier))", terminator: "")
           }
           
-          if verbose {
+          if verbose, let name {
             print(" - \(name)")
           } else {
             print()
