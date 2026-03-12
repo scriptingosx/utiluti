@@ -1,7 +1,12 @@
 # Change Log – utiluti
 
+## v1.4
+
+- app type list no longer drops types without a name
+
+
 ## v1.3
-(2025-08-xx)
+(2025-08-01)
 
 - improved concurrency code (#3, thank you @davedelong)
 - added verbs to get an app's bundle identifier and version
