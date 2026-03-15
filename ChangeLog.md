@@ -1,5 +1,13 @@
 # Change Log – utiluti
 
+## v1.5
+
+(2026-03-15)
+
+- `type` subcommands now have a `--extension/-e` flag to provide a file extension instead of a type identifier (#9)
+- fixed version initialization in pkgAndNotarize script (#8)
+- updated to swift-argument-parser 1.7.0 and Swift 6.2 (#7)
+
 ## v1.4
 
 (2026-03-12)

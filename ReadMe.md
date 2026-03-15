@@ -84,9 +84,18 @@ $ utiluti get-uti txt
 public.plain-text
 ```
 
+You can also use the `--extension/-e` flag to provide a file extension instead of a UTI for all `type` subcommands, e.g.:
+
+```sh
+$ utiluti type info -e txt
+uniform type identifier: public.plain-text
+public.mime-type: ["text/plain"]
+public.filename-extension: ["txt", "text"]
+```
+
 Get the default application for a UTI:
 
-```
+```sh
 $ utiluti type public.plain-text
 /System/Applications/TextEdit.app
 ```
