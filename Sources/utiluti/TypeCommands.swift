@@ -27,8 +27,24 @@ struct TypeCommands: AsyncParsableCommand {
   struct UTIdentifier: ParsableArguments {
     @Argument(help: ArgumentHelp(
       "universal type identifier, e.g. 'public.html'",
-      valueName: "uti"))
+      discussion: "when --extension is present, this argument provides a file extension, e.g. 'txt'",
+      valueName: "identifier"))
     var value: String
+    
+    @Flag(
+      name: [.customLong("extension"), .customLong("ext"), .customShort("e")],
+      help: "provide a file extension instead of a UTI",
+    )
+    var fileExtension = false
+    
+    var identifier: String {
+      if fileExtension,
+         let identifier = UTType(filenameExtension: value){
+        return identifier.identifier
+      } else {
+        return value
+      }
+    }
   }
   
   struct IdentifierFlag: ParsableArguments {
@@ -46,7 +62,7 @@ struct TypeCommands: AsyncParsableCommand {
     @OptionGroup var bundleID: IdentifierFlag
     
     func run() async {
-      guard let appURL = LSKit.defaultAppURL(forTypeIdentifier: utidentifier.value) else {
+      guard let appURL = LSKit.defaultAppURL(forTypeIdentifier: utidentifier.identifier) else {
         print("<no default app found>")
         return
       }
@@ -72,7 +88,7 @@ struct TypeCommands: AsyncParsableCommand {
     @OptionGroup var bundleID: IdentifierFlag
 
     func run() async {
-      let appURLs = LSKit.appURLs(forTypeIdentifier: utidentifier.value)
+      let appURLs = LSKit.appURLs(forTypeIdentifier: utidentifier.identifier)
       
       for appURL in appURLs {
         if bundleID.bundleID {
@@ -96,12 +112,12 @@ struct TypeCommands: AsyncParsableCommand {
     @Argument var identifier: String
     
     func run() async {
-      let result = await LSKit.setDefaultApp(identifier: identifier, forTypeIdentifier: utidentifier.value)
+      let result = await LSKit.setDefaultApp(identifier: identifier, forTypeIdentifier: utidentifier.identifier)
       
       if result == 0 {
-        print("set \(identifier) for \(utidentifier.value)")
+        print("set \(identifier) for \(utidentifier.identifier)")
       } else {
-        print("cannot set default app for \(utidentifier.value) (error \(result))")
+        print("cannot set default app for \(utidentifier.identifier) (error \(result))")
         TypeCommands.exit(withError: ExitCode(result))
       }
     }
@@ -114,7 +130,7 @@ struct TypeCommands: AsyncParsableCommand {
     @OptionGroup var utidentifier: UTIdentifier
     
     func run() async {
-      guard let utype = UTType(utidentifier.value) else {
+      guard let utype = UTType(utidentifier.identifier) else {
         print("<none>")
         TypeCommands.exit(withError: ExitCode(3))
       }
@@ -131,11 +147,11 @@ struct TypeCommands: AsyncParsableCommand {
     @OptionGroup var utidentifier: UTIdentifier
     
     func run() async {
-      guard let utype = UTType(utidentifier.value) else {
+      guard let utype = UTType(utidentifier.identifier) else {
         print("<none>")
         TypeCommands.exit(withError: ExitCode(3))
       }
-      
+      print("uniform type identifier: \(utype.identifier)")
       for (key, value) in utype.tags {
         print("\(key): \(value)")
       }

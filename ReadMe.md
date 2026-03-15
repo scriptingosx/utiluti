@@ -209,10 +209,6 @@ $ utiluti app for-id com.apple.notes
 /System/Applications/Notes.app
 ```
 
-
-
-
-
 ## Default app for specific files
 
 macOS allows for a file to be assigned to an app different from the general default app for that file type. `utiluti` has the `file` verb to inspect or set the default app for a specific file.
