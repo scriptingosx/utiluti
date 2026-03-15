@@ -2,6 +2,8 @@
 
 ## v1.4
 
+(2026-03-12)
+
 - app type list no longer drops types without a name
 
 
@@ -10,7 +12,7 @@
 
 - improved concurrency code (#3, thank you @davedelong)
 - added verbs to get an app's bundle identifier and version
-- utiluti now has a man page 
+- utiluti now has a man page
 
 ## v1.2
 
