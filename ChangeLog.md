@@ -5,6 +5,8 @@
 (2026-03-15)
 
 - `type` subcommands now have a `--extension/-e` flag to provide a file extension instead of a type identifier (#9)
+- set default apps for file extensions in type-files and managed preferences with an `extension:` prefix
+- added more info to `type info`
 - fixed version initialization in pkgAndNotarize script (#8)
 - updated to swift-argument-parser 1.7.0 and Swift 6.2 (#7)
 

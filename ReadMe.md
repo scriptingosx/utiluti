@@ -84,15 +84,6 @@ $ utiluti get-uti txt
 public.plain-text
 ```
 
-You can also use the `--extension/-e` flag to provide a file extension instead of a UTI for all `type` subcommands, e.g.:
-
-```sh
-$ utiluti type info -e txt
-uniform type identifier: public.plain-text
-public.mime-type: ["text/plain"]
-public.filename-extension: ["txt", "text"]
-```
-
 Get the default application for a UTI:
 
 ```sh
@@ -121,6 +112,25 @@ Set the the default app for a given UTI:
 ```
 $ utiluti type set public.plain-text com.barebones.bbedit
 set com.barebones.bbedit for public.plain-text
+```
+
+You can get more information about a type with the `info` subcommand:
+
+```
+$ utiluti type info public.xml
+uniform type identifier: public.xml
+public.mime-type: ["application/xml", "text/xml"]
+public.filename-extension: ["xml"]
+default app: com.apple.dt.Xcode (/Applications/Xcode.app)
+```
+
+For all `type` subcommands you can also use the `--extension/-e` flag to provide a file extension instead of a UTI for all `type` subcommands, e.g.:
+
+```sh
+$ utiluti type info -e txt
+uniform type identifier: public.plain-text
+public.mime-type: ["text/plain"]
+public.filename-extension: ["txt", "text"]
 ```
 
 ## Getting an App's declarations and other information
@@ -263,11 +273,14 @@ The file format is an XML Property list. You will need two separate files for as
 
 The root object of the property list is a `dict`, each key will be the url scheme or UTI, respectively. The value is the application bundle identifier for the default app that should be set.
 
+In `--type-files`, you can set the default app for for file extension with the prefix `extension:`, e.g. `extension:xslt`.
+
 ```
 $ utiluti manage --type-file types.plist
-set com.fatcatsoftware.pledpro for com.apple.property-list
-set com.barebones.BBEdit for public.plain-text
 set com.barebones.BBEdit for public.shell-script
+set com.barebones.BBEdit for extension:xslt
+set com.barebones.BBEdit for public.plain-text
+set com.fatcatsoftware.pledpro for com.apple.property-list
 ```
 
 ```
@@ -278,9 +291,10 @@ set com.ranchero.NetNewsWire-Evergreen for feed
 
 ```
 $ utiluti manage --type-file types.plist --url-file urls.plist
-set com.fatcatsoftware.pledpro for com.apple.property-list
-set com.barebones.BBEdit for public.plain-text
 set com.barebones.BBEdit for public.shell-script
+set com.barebones.BBEdit for extension:xslt
+set com.barebones.BBEdit for public.plain-text
+set com.fatcatsoftware.pledpro for com.apple.property-list
 set com.microsoft.Outlook for mailto
 set com.ranchero.NetNewsWire-Evergreen for feed
 ```
@@ -317,8 +331,11 @@ Example (UTIs):
 	<string>com.barebones.BBEdit</string>
 	<key>public.shell-script</key>
 	<string>com.barebones.BBEdit</string>
+	<key>extension:xslt</key>
+	<string>com.barebones.BBEdit</string>
 </dict>
 </plist>
+
 ```
 
 ### From defaults and managed preferences
@@ -327,9 +344,10 @@ For managed deployments, the settings can be read from a configuration profile.
 
 ```
 $ utiluti manage
-set com.fatcatsoftware.pledpro for com.apple.property-list
-set com.barebones.BBEdit for public.plain-text
 set com.barebones.BBEdit for public.shell-script
+set com.barebones.BBEdit for extension:xslt
+set com.barebones.BBEdit for public.plain-text
+set com.fatcatsoftware.pledpro for com.apple.property-list
 set com.microsoft.Outlook for mailto
 set com.ranchero.NetNewsWire-Evergreen for feed
 ```
