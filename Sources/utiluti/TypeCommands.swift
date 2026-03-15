@@ -152,8 +152,15 @@ struct TypeCommands: AsyncParsableCommand {
         TypeCommands.exit(withError: ExitCode(3))
       }
       print("uniform type identifier: \(utype.identifier)")
+      
       for (key, value) in utype.tags {
         print("\(key): \(value)")
+      }
+      
+      if let appURL = LSKit.defaultAppURL(forTypeIdentifier: utype.identifier),
+         let bundle = Bundle(url: appURL),
+         let identifier = bundle.bundleIdentifier {
+        print("default app: \(identifier) (\(appURL.path))")
       }
     }
   }
