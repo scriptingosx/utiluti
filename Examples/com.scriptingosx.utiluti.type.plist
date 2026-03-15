@@ -8,5 +8,7 @@
 	<string>com.barebones.BBEdit</string>
 	<key>public.shell-script</key>
 	<string>com.barebones.BBEdit</string>
+	<key>extension:xslt</key>
+	<string>com.barebones.BBEdit</string>
 </dict>
 </plist>

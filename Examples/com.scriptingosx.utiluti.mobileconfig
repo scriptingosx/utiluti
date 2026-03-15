@@ -35,8 +35,10 @@
 			<string>com.fatcatsoftware.pledpro</string>
 			<key>public.plain-text</key>
 			<string>com.barebones.BBEdit</string>
-			<key>public.shell-script</key>
-			<string>com.barebones.BBEdit</string>
+      <key>public.shell-script</key>
+      <string>com.barebones.BBEdit</string>
+      <key>extension:xslt</key>
+      <string>com.barebones.BBEdit</string>
 		</dict>
 	</array>
 	<key>PayloadDisplayName</key>

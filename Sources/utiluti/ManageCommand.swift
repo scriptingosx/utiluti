@@ -7,6 +7,7 @@
 
 import Foundation
 import ArgumentParser
+import UniformTypeIdentifiers
 
 struct ManageCommand: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
@@ -49,17 +50,27 @@ struct ManageCommand: AsyncParsableCommand {
 
   func manageTypes(types: [String:Any]) async throws {
     for (uti, value) in types {
+      var uti = uti
+      let display = uti
+      
       guard let bundleID = value as? String
       else {
         if verbose { print("skipping non-string value '\(value)' for \(uti)")}
         continue
       }
+      
+      if uti.hasPrefix("extension:") {
+        let fileExt = String(uti.dropFirst(10))
+        if let utype = UTType(filenameExtension: fileExt) {
+          uti = utype.identifier
+        }
+      }
 
       let result = await LSKit.setDefaultApp(identifier: bundleID, forTypeIdentifier: uti)
       if result == 0 {
-        print("set \(bundleID) for \(uti)")
+        print("set \(bundleID) for \(display)")
       } else {
-        print("ERROR: cannot set \(bundleID) for \(uti) (error \(result))")
+        print("ERROR: cannot set \(bundleID) for \(display) (error \(result))")
       }
     }
   }
