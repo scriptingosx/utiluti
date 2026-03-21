@@ -21,7 +21,8 @@ struct TypeCommands: AsyncParsableCommand {
       Info.self,
       FileExtensions.self
     ],
-    defaultSubcommand: Get.self
+    defaultSubcommand: Get.self,
+    aliases: ["uti"]
   )
   
   struct UTIdentifier: ParsableArguments {
@@ -48,9 +49,13 @@ struct TypeCommands: AsyncParsableCommand {
   }
   
   struct IdentifierFlag: ParsableArguments {
-    @Flag(help: ArgumentHelp(
+    @Flag(
+      name: [.customShort("b"), .customLong("bundle-id")],
+      help: ArgumentHelp(
       "list bundle identifiers instead of paths",
-      valueName: "bundleID"))
+      valueName: "bundleID"
+      )
+    )
     var bundleID = false
   }
   
