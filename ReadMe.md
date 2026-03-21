@@ -43,7 +43,7 @@ $ utiluti url mailto
 /System/Applications/Mail.app
 ```
 
-Use the `--bundle-id` flag to receive the app's bundle identifier instead:
+Use the `--bundle-id`/`-b` flag to receive the app's bundle identifier instead:
 
 ```
 $ utiluti url mailto --bundle-id     
@@ -58,7 +58,7 @@ $ utiluti url list mailto
 /Applications/Microsoft Outlook.app
 ```
 
-Use the `--bundle-id` flag to receive the apps' bundle identifiers instead:
+Use the `--bundle-id`/`-b` flag to receive the apps' bundle identifiers instead:
 
 ```
 $ utiluti url list mailto --bundle-id 
@@ -105,32 +105,37 @@ $ utiluti type list public.plain-text
 /System/Applications/Notes.app
 ```
 
-Add the `--bundle-id` flag to receive bundle identifiers instead of paths.
+Add the `--bundle-id`/`-b` flag to receive bundle identifiers instead of paths.
 
 Set the the default app for a given UTI:
 
-```
+```shell
 $ utiluti type set public.plain-text com.barebones.bbedit
 set com.barebones.bbedit for public.plain-text
 ```
 
 You can get more information about a type with the `info` subcommand:
 
-```
+```shell
 $ utiluti type info public.xml
 uniform type identifier: public.xml
-public.mime-type: ["application/xml", "text/xml"]
+description: XML text
 public.filename-extension: ["xml"]
+public.mime-type: ["application/xml", "text/xml"]
+super types: ["public.data", "public.text", "public.content", "public.item"]
 default app: com.apple.dt.Xcode (/Applications/Xcode.app)
 ```
 
 For all `type` subcommands you can also use the `--extension/-e` flag to provide a file extension instead of a UTI for all `type` subcommands, e.g.:
 
-```sh
+```shell
 $ utiluti type info -e txt
 uniform type identifier: public.plain-text
+description: text
 public.mime-type: ["text/plain"]
 public.filename-extension: ["txt", "text"]
+super types: ["public.item", "public.content", "public.data", "public.text"]
+default app: com.barebones.bbedit (/Applications/BBEdit.app)
 ```
 
 ## Getting an App's declarations and other information
@@ -139,7 +144,7 @@ public.filename-extension: ["txt", "text"]
 
 List the URL schemes for a given app with `app schemes`:
 
-```
+```shell
 $ utiluti app schemes com.apple.safari
 http
 https
@@ -149,7 +154,7 @@ x-safari-https
 
 List the UTIs and file extensions for a given app with `app types`
 
-```
+```shell
 $ utiluti app types com.apple.TextEdit
 public.rtf
 com.apple.rtfd
@@ -167,7 +172,7 @@ public.data
 
 Some apps declare file extensions instead of UTIs. In this case `utiluti` will prepend `file extension:`. If there is an associated UTI, it will be shown in parenthesis:
 
-```
+```shell
 $ utiluti app types com.apple.safari
 file extension: css (public.css)
 file extension: pdf (com.adobe.pdf)

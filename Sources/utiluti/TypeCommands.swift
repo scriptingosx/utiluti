@@ -158,8 +158,16 @@ struct TypeCommands: AsyncParsableCommand {
       }
       print("uniform type identifier: \(utype.identifier)")
       
+      if let description = utype.localizedDescription {
+        print("description: \(description)")
+      }
+      
       for (key, value) in utype.tags {
         print("\(key): \(value)")
+      }
+      
+      if !utype.supertypes.isEmpty {
+        print("super types: \(utype.supertypes.map(\.identifier))")
       }
       
       if let appURL = LSKit.defaultAppURL(forTypeIdentifier: utype.identifier),
