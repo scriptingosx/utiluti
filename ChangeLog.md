@@ -4,8 +4,9 @@
 
 (2026-xx-yy)
 
+- added `scheme` and `urlscheme` as synonyms for `url`
 - added `app utis` and `app urls` as synonyms for `app types` and `app schemes`
-
+- added `-b` as short flag for `--bundle-id`
 
 ## v1.5
 

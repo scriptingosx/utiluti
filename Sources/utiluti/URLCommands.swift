@@ -12,12 +12,9 @@ struct URLCommands: AsyncParsableCommand {
   static let configuration = CommandConfiguration(
     commandName: "url",
     abstract: "Manipulate default URL scheme handlers",
-    subcommands: [
-      Get.self,
-      List.self,
-      Set.self
-    ],
-    defaultSubcommand: Get.self
+    subcommands: [Get.self, List.self, Set.self],
+    defaultSubcommand: Get.self,
+    aliases: ["scheme", "urlscheme"]
   )
   
   struct URLScheme: ParsableArguments {
@@ -31,9 +28,13 @@ struct URLCommands: AsyncParsableCommand {
   }
   
   struct IdentifierFlag: ParsableArguments {
-    @Flag(help: ArgumentHelp(
+    @Flag(
+      name: [.customShort("b"), .customLong("bundle-id")],
+      help: ArgumentHelp(
       "list bundle identifiers instead of paths",
-      valueName: "bundleID"))
+      valueName: "bundleID"
+      )
+    )
     var bundleID = false
   }
   
