@@ -1,5 +1,12 @@
 # Change Log – utiluti
 
+## v1.6
+
+(2026-xx-yy)
+
+- added `app utis` and `app urls` as synonyms for `app types` and `app schemes`
+
+
 ## v1.5
 
 (2026-03-15)

@@ -28,7 +28,10 @@ struct AppCommands: AsyncParsableCommand {
   
   struct Types: AsyncParsableCommand {
     static let configuration
-    = CommandConfiguration(abstract: "List the uniform type identifiers this app can open")
+    = CommandConfiguration(
+      abstract: "List the uniform type identifiers this app can open",
+      aliases: ["utis"]
+    )
     
     @Argument(help:ArgumentHelp("the app identifier", valueName: "app-identifier"))
     var appID: String
@@ -88,7 +91,10 @@ struct AppCommands: AsyncParsableCommand {
   
   struct Schemes: AsyncParsableCommand {
     static let configuration
-    = CommandConfiguration(abstract: "List the urls schemes this app can open")
+    = CommandConfiguration(
+      abstract: "List the urls schemes this app can open",
+      aliases: ["urls"]
+    )
     
     @Argument(help:ArgumentHelp("the app identifier", valueName: "app-identifier"))
     var appID: String
