@@ -21,7 +21,7 @@ struct ManageCommand: AsyncParsableCommand {
   @Option(help: "path to a local plist file containing url scheme associations")
   var urlFile: String?
 
-  @Flag(help: "increase output")
+  @Flag(name: .shortAndLong, help: "increase output")
   var verbose = false
 
   @Flag(help: "includes unmanaged (local) keys")

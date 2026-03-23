@@ -8,6 +8,7 @@
 - added `uti` as synonym for `type`
 - added `app utis` and `app urls` as synonyms for `app types` and `app schemes`
 - added `-b` as short flag for `--bundle-id` in `type` and `url`
+- added short flag `-v` for `--verbosity` for `manage`
 - added description and super types to `type info`
 
 ## v1.5
