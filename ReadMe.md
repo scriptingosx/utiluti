@@ -8,10 +8,12 @@ You can use `utiluti` to inspect and modify default apps for url schemes and fil
 
 ## Important notes:
 
-- `utiluti` should run as the current user
+- `utiluti` should run as the [current user](https://scriptingosx.com/2020/08/running-a-command-as-another-user/)
 
 - when you attempt to set the default app for the `http` url scheme, macOS will prompt the user for confirmation. The user has the option to reject the change. The user must make a selection for the tool to continue. Consider this when using `utiluti` for automation. You should wrap the script in some other UI to prepare the user for the dialog.
-  (See [macadmins/default-browser](https://github.com/macadmins/default-browser/tree/main) for an alternative solution)
+  (See [macadmins/default-browser](https://github.com/macadmins/default-browser/tree/main) or [LSTemplatePkg](https://github.com/scriptingosx/LSTemplatePkg) for possible solutions)
+  
+- starting in macOS 26.4, macOS will _also_ prompt for every change on a default app for a file/content type or uniform type identifier. The user also get the option to reject the change and the tool will stall until the user makes a choice. This is especially annoying when switching multiple file/content types to a new default app (e.g. a new IDE) (See [LSTemplatePkg](https://github.com/scriptingosx/LSTemplatePkg) for a possible solution.)
 
 - macOS connects the `http` and `https` url schemes and the `public.html` UTI. You can only set the default app for `http`. Then the default app for `https` and the `public.html` type will be set to the same app. Attempting to change the default apps for `https` or `public.html` independently will result in an error.
 
