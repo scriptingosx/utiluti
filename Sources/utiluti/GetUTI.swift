@@ -22,7 +22,9 @@ struct GetUTI: AsyncParsableCommand {
   var showDynamic = false
   
   func run() async {
-    guard let utype = UTType(filenameExtension: fileExtension) else {
+    let normalizedExtension = TypeTarget.normalizeExtension(fileExtension)
+
+    guard let utype = UTType(filenameExtension: normalizedExtension) else {
       Self.exit(withError: ExitCode(3))
     }
     

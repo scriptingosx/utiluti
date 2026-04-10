@@ -25,7 +25,7 @@ struct TypeCommands: AsyncParsableCommand {
     aliases: ["uti"]
   )
   
-  struct UTIdentifier: ParsableArguments {
+  struct TypeIdentifier: ParsableArguments {
     @Argument(help: ArgumentHelp(
       "universal type identifier, e.g. 'public.html'",
       discussion: "when --extension is present, this argument provides a file extension, e.g. 'txt'",
@@ -37,14 +37,9 @@ struct TypeCommands: AsyncParsableCommand {
       help: "provide a file extension instead of a UTI",
     )
     var fileExtension = false
-    
-    var identifier: String {
-      if fileExtension,
-         let identifier = UTType(filenameExtension: value){
-        return identifier.identifier
-      } else {
-        return value
-      }
+
+    var target: TypeTarget {
+      TypeTarget(value: value, isFileExtension: fileExtension)
     }
   }
   
@@ -63,20 +58,22 @@ struct TypeCommands: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "Get the path to the default application.")
     
-    @OptionGroup var utidentifier: UTIdentifier
+    @OptionGroup var utidentifier: TypeIdentifier
     @OptionGroup var bundleID: IdentifierFlag
     
     func run() async {
-      guard let appURL = LSKit.defaultAppURL(forTypeIdentifier: utidentifier.identifier) else {
-        print("<no default app found>")
-        return
-      }
+      let target = utidentifier.target
+      let details = LSKit.defaultAppDetails(for: target)
+
       if bundleID.bundleID {
-        guard let appBundle = Bundle(url: appURL) else {
-          Self.exit(withError: ExitCode(6))
-        }
-        print(appBundle.bundleIdentifier ?? "<no identifier>")
+        print(details.bundleIdentifier ?? "<no default app found>")
       } else {
+        let appURL = details.appURL
+        guard let appURL else {
+          print("<no default app found>")
+          return
+        }
+
         print(appURL.path)
       }
     }
@@ -89,11 +86,11 @@ struct TypeCommands: AsyncParsableCommand {
       aliases: ["ls"]
     )
 
-    @OptionGroup var utidentifier: UTIdentifier
+    @OptionGroup var utidentifier: TypeIdentifier
     @OptionGroup var bundleID: IdentifierFlag
 
     func run() async {
-      let appURLs = LSKit.appURLs(forTypeIdentifier: utidentifier.identifier)
+      let appURLs = LSKit.appURLs(for: utidentifier.target)
       
       for appURL in appURLs {
         if bundleID.bundleID {
@@ -113,16 +110,16 @@ struct TypeCommands: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "Set the default app for this type identifier.")
     
-    @OptionGroup var utidentifier: UTIdentifier
+    @OptionGroup var utidentifier: TypeIdentifier
     @Argument var identifier: String
     
     func run() async {
-      let result = await LSKit.setDefaultApp(identifier: identifier, forTypeIdentifier: utidentifier.identifier)
+      let result = await LSKit.setDefaultApp(identifier: identifier, for: utidentifier.target)
       
       if result == 0 {
-        print("set \(identifier) for \(utidentifier.identifier)")
+        print("set \(identifier) for \(utidentifier.target.displayValue)")
       } else {
-        print("cannot set default app for \(utidentifier.identifier) (error \(result))")
+        print("cannot set default app for \(utidentifier.target.displayValue) (error \(result))")
         TypeCommands.exit(withError: ExitCode(result))
       }
     }
@@ -132,10 +129,11 @@ struct TypeCommands: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "prints the file extensions for the given type identifier")
     
-    @OptionGroup var utidentifier: UTIdentifier
+    @OptionGroup var utidentifier: TypeIdentifier
     
     func run() async {
-      guard let utype = UTType(utidentifier.identifier) else {
+      let utype = utidentifier.target.resolvedType
+      guard let utype else {
         print("<none>")
         TypeCommands.exit(withError: ExitCode(3))
       }
@@ -149,31 +147,74 @@ struct TypeCommands: AsyncParsableCommand {
     static let configuration
     = CommandConfiguration(abstract: "prints information for the given type identifier")
 
-    @OptionGroup var utidentifier: UTIdentifier
-    
-    func run() async {
-      guard let utype = UTType(utidentifier.identifier) else {
-        print("<none>")
-        TypeCommands.exit(withError: ExitCode(3))
+    @OptionGroup var utidentifier: TypeIdentifier
+
+    func printTypeInfo(for utype: UTType, includeIdentifier: Bool = true) {
+      if includeIdentifier {
+        print("uniform type identifier: \(utype.identifier)")
       }
-      print("uniform type identifier: \(utype.identifier)")
-      
+
       if let description = utype.localizedDescription {
         print("description: \(description)")
       }
-      
+
       for (key, value) in utype.tags {
         print("\(key): \(value)")
       }
-      
+
       if !utype.supertypes.isEmpty {
         print("super types: \(utype.supertypes.map(\.identifier))")
       }
-      
-      if let appURL = LSKit.defaultAppURL(forTypeIdentifier: utype.identifier),
-         let bundle = Bundle(url: appURL),
-         let identifier = bundle.bundleIdentifier {
-        print("default app: \(identifier) (\(appURL.path))")
+    }
+
+    func printDefaultApp(bundleIdentifier: String?, appURL: URL?) {
+      guard let bundleIdentifier else {
+        if let appURL {
+          print("default app: \(appURL.path)")
+        }
+        return
+      }
+
+      if let appURL {
+        print("default app: \(bundleIdentifier) (\(appURL.path))")
+      } else {
+        print("default app: \(bundleIdentifier)")
+      }
+    }
+
+    func run() async {
+      let target = utidentifier.target
+      let details = LSKit.defaultAppDetails(for: target)
+
+      switch target {
+      case .uti:
+        guard let utype = target.resolvedType else {
+          print("<none>")
+          TypeCommands.exit(withError: ExitCode(3))
+        }
+
+        printTypeInfo(for: utype)
+        printDefaultApp(
+          bundleIdentifier: details.bundleIdentifier,
+          appURL: details.appURL
+        )
+
+      case .fileExtension(let fileExtension):
+        print("requested extension: \(fileExtension)")
+
+        if let utype = target.resolvedType,
+           let resolvedIdentifier = target.resolvedIdentifier {
+          print("resolved UTI: \(resolvedIdentifier)")
+          print("dynamic UTI: \(target.hasDynamicResolvedIdentifier)")
+          printTypeInfo(for: utype, includeIdentifier: false)
+        } else {
+          print("resolved UTI: <none>")
+        }
+
+        printDefaultApp(
+          bundleIdentifier: details.bundleIdentifier,
+          appURL: details.appURL
+        )
       }
     }
   }

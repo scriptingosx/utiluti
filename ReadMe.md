@@ -140,6 +140,23 @@ super types: ["public.item", "public.content", "public.data", "public.text"]
 default app: com.barebones.bbedit (/Applications/BBEdit.app)
 ```
 
+When you pass `--extension/-e`, `utiluti` resolves the extension to a UTI first and uses the UTI-based workflow when that yields a usable result. If the UTI route does not produce a usable handler, `utiluti` falls back to an extension-specific Launch Services override. This matters for extensions that resolve to a dynamic `dyn.*` identifier.
+
+```shell
+$ utiluti type set -e xcodeproj com.apple.dt.Xcode
+set com.apple.dt.Xcode for extension:xcodeproj
+```
+
+```shell
+$ utiluti type info -e xcodeproj
+requested extension: xcodeproj
+resolved UTI: dyn.ah62d4rv4ge81u25tqvw1a6xtrk
+dynamic UTI: true
+public.filename-extension: ["xcodeproj"]
+super types: ["public.data", "public.item"]
+default app: com.apple.dt.Xcode
+```
+
 ## Getting an App's declarations and other information
 
 `utiluti` can list the UTIs and url schemes an app has declared in their Info.plist:
